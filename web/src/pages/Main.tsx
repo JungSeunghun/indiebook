@@ -18,6 +18,7 @@ const MainPageLogo = styled.img`
 `;
 
 const NormalSection = styled.div`
+  background-color: #FFFFFF;
   border: 1px solid black;
   width: fit-content;
   border-radius: 20px;
@@ -100,10 +101,13 @@ function movementReducer(state: State, action: Action): State {
 }
 
 function useRandomMovement(initialX: number, initialY: number, initialWidth: number) {
+  // 화면의 중앙을 계산
+  const centerX = window.innerWidth / 2;
+
   const [state, dispatch] = useReducer(movementReducer, {
-    position: { x: initialX, y: initialY },
+    position: { x: centerX + initialX, y:  initialY },
     velocity: {
-      vx: Math.random() * 0.4 - 0.2,
+      vx: Math.random() * 0.4 - 0.2, // 속도는 그대로 유지
       vy: Math.random() * 0.4 - 0.2,
     },
     width: initialWidth,
@@ -140,10 +144,14 @@ const MovableComponent = styled.div<MovableComponentProps>`
 `;
 
 const SubscribePage: React.FC = () => {
-  const { position: yellowCircle1Pos, width: yellowCircle1Width } = useRandomMovement(100, 100, 256);
-  const { position: whiteCircle1Pos, width: whiteCircle1Width } = useRandomMovement(225, 225, 256);
-  const { position: yellowCircle2Pos, width: yellowCircle2Width } = useRandomMovement(600, 300, 128);
-  const { position: whiteCircle2Pos, width: whiteCircle2Width } = useRandomMovement(500, 350, 256);
+  const { position: yellowCircle1Pos, width: yellowCircle1Width } = useRandomMovement(-500, 100, 256);
+  const { position: whiteCircle1Pos, width: whiteCircle1Width } = useRandomMovement(-400, 225, 256);
+  const { position: yellowCircle2Pos, width: yellowCircle2Width } = useRandomMovement(400, 300, 128);
+  const { position: whiteCircle2Pos, width: whiteCircle2Width } = useRandomMovement(250, 350, 256);
+
+  const { position: normalSectionPos } = useRandomMovement(-200, 200, 200); // NormalSection 컴포넌트용
+  const { position: colorSection1Pos } = useRandomMovement(-200, 600, 200); // ColorSection1 컴포넌트용
+  const { position: colorSection2Pos } = useRandomMovement(200, 600, 200); // ColorSection2 컴포넌트용
 
   return (
     <div>
@@ -154,16 +162,16 @@ const SubscribePage: React.FC = () => {
         <MovableComponent style={{ left: `${yellowCircle2Pos.x}px`, top: `${yellowCircle2Pos.y}px` }} color="#FFB443" width={yellowCircle2Width}/>
         <MovableComponent style={{ left: `${whiteCircle2Pos.x}px`, top: `${whiteCircle2Pos.y}px` }} color="#FFFFFF" width={whiteCircle2Width}/>
         <MainPageLogo src={'/logo/main_page_logo.svg'}/>
-        <NormalSection>
+        <NormalSection style={{ left: `${normalSectionPos.x}px`, top: `${normalSectionPos.y}px` }}>
           공지사항<br/>
           날짜: 24.04.20<br/><br/>
           글조명 1.0ver 홈페이지 오픈~!
         </NormalSection>
-        <ColorSection1>
+        <ColorSection1 style={{ left: `${colorSection1Pos.x}px`, top: `${colorSection1Pos.y}px` }}>
           글조명 인스타 팔로우하고<br/>
           나만의 꽃 그림 받아가세요~
         </ColorSection1>
-        <ColorSection2>
+        <ColorSection2 style={{ left: `${colorSection2Pos.x}px`, top: `${colorSection2Pos.y}px` }}>
           인스타그램<br/>
           바로가기
         </ColorSection2>
