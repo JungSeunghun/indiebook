@@ -3,70 +3,38 @@ import styled from "@emotion/styled"
 
 const Base = styled.footer`
   display: block;
-  box-sizing: border-box;
+  background-color: #ffffff;
   width: 100%;
 `;
 
 const Section = styled.section`
-  background-color: #1c1d1f;
+  margin: 0 auto;
+  width: 1136px;
+  height: 172px;
+  background-color: #FFB443;
 `;
 
 const Container = styled.section`
-  background: #1c1d1f;
-  padding: 20px 0 38px;
+  text-align: right;
+  padding: 16px 40px;
 `;
 
-const ContentWrapper = styled.div`
-  display: flex;
-  margin: 0 60px;
-`;
-
-const Left = styled.div``;
-
-const Right = styled.div``;
-
-const TermAndPolicy = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const TermAndPolicyItem = styled.li`
-  display: inline-block;
-  color: #a5a5a7;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 22px;
-  vertical-align: top;
-  cursor: pointer;
-  &:not(:last-of-type) {
-    &:after {
-      content: "";
-      display: inline-block;
-      background: #848485;
-      vertical-align: top;
-      width: 1px;
-      height: 12px;
-      margin: 5px 8px 0;
-    }
-  }
-`;
+const FooterTitle = styled.div``;
+const FooterText = styled.div``;
+const FooterIcon = styled.div``;
+const FooterLink = styled.div``;
 
 const Footer: React.FC = () => {
     return (
         <Base>
             <Section>
                 <Container>
-                    <ContentWrapper>
-                        <Left>
-                            <TermAndPolicy>
-                                <TermAndPolicyItem>서비스 이용약관</TermAndPolicyItem>
-                                <TermAndPolicyItem>개인정보 처리방침</TermAndPolicyItem>
-                                <TermAndPolicyItem>회사 정보</TermAndPolicyItem>
-                            </TermAndPolicy>
-                        </Left>
-                        <Right/>
-                    </ContentWrapper>
+                  <FooterTitle>글조명</FooterTitle>
+                  <FooterText>제작: 권오현 / 심화영 / 정승훈</FooterText>
+                  <FooterIcon>
+                    <img src={'/icons/instagram.svg'}/>
+                  </FooterIcon>
+                  <FooterLink>개인정보처리방침</FooterLink>
                 </Container>
             </Section>
         </Base>
