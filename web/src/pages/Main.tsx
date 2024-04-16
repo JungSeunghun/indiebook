@@ -80,9 +80,9 @@ function movementReducer(state: State, action: Action): State {
         newVx = -newVx;
         newX = newX <= 0 ? 0 : document.body.offsetWidth - state.width;
       }
-      if (newY <= 0 || newY + state.height >= 1134) {
+      if (newY <= 0 || newY + state.height >= 1194) {
         newVy = -newVy;
-        newY = newY <= 0 ? 0 : 1134 - state.height;
+        newY = newY <= 0 ? 0 : 1194 - state.height;
       }
 
       return {
@@ -158,20 +158,20 @@ const SubscribePage: React.FC = () => {
   const { ref: yellowCircle2Ref, position: yellowCircle2Pos } = useRandomMovement(1400, 350, 0);
   const { ref: whiteCircle2Ref, position: whiteCircle2Pos } = useRandomMovement(1250, 400, 0);
 
-  const { position: normalSectionPos } = useRandomMovement(450, 200, 20);
-  const { position: colorSection1Pos } = useRandomMovement(450, 900,  20);
-  const { position: colorSection2Pos } = useRandomMovement(1200, 900, 20);
+  const { ref: normalSectionRef, position: normalSectionPos } = useRandomMovement(450, 200, 20);
+  const { ref: colorSection1Ref, position: colorSection1Pos } = useRandomMovement(450, 900,  20);
+  const { ref: colorSection2Ref, position: colorSection2Pos } = useRandomMovement(1200, 900, 20);
 
   return (
     <div>
       <Header/>
       <Main>
-        <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}px`, top: `${yellowCircle1Pos.y}px`, width: "256px", height: "256px" }} color="#FFB443"/>
-        <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}px`, top: `${whiteCircle1Pos.y}px`, width: "256px", height: "256px" }} color="#FFFFFF"/>
-        <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}px`, top: `${yellowCircle2Pos.y}px`, width: "128px", height: "128px" }} color="#FFB443"/>
-        <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}px`, top: `${whiteCircle2Pos.y}px`, width: "256px", height: "256px" }} color="#FFFFFF"/>
+        <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}px`, top: `${yellowCircle1Pos.y}px`, width: "16rem", height: "16rem" }} color="#FFB443"/>
+        <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}px`, top: `${whiteCircle1Pos.y}px`, width: "16rem", height: "16rem" }} color="#FFFFFF"/>
+        <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}px`, top: `${yellowCircle2Pos.y}px`, width: "8rem", height: "8rem" }} color="#FFB443"/>
+        <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}px`, top: `${whiteCircle2Pos.y}px`, width: "16rem", height: "16rem" }} color="#FFFFFF"/>
         <MainPageLogo src={'/logo/main_page_logo.svg'}/>
-        <NormalSection style={{ left: `${normalSectionPos.x}px`, top: `${normalSectionPos.y}px` }}>
+        <NormalSection ref={normalSectionRef} style={{ left: `${normalSectionPos.x}px`, top: `${normalSectionPos.y}px` }}>
           <H2_400>
             공지사항<br/>
             날짜: 24.04.20<br/><br/>
@@ -179,7 +179,7 @@ const SubscribePage: React.FC = () => {
           </H2_400>
         </NormalSection>
         <Link href={'https://www.instagram.com/writing.lighting?igsh=c2RmM3V6eHpuNGc2&utm_source=qr'} target={'_blank'}>
-          <ColorSection1 style={{ left: `${colorSection1Pos.x}px`, top: `${colorSection1Pos.y}px` }}>
+          <ColorSection1 ref={colorSection1Ref} style={{ left: `${colorSection1Pos.x}px`, top: `${colorSection1Pos.y}px` }}>
             <H2_400>
               글조명 인스타 팔로우하고<br/>
               나만의 꽃 그림 받아가세요~
@@ -187,7 +187,7 @@ const SubscribePage: React.FC = () => {
           </ColorSection1>
         </Link>
         <Link href={'https://www.instagram.com/writing.lighting?igsh=c2RmM3V6eHpuNGc2&utm_source=qr'} target={'_blank'}>
-          <ColorSection2 style={{ left: `${colorSection2Pos.x}px`, top: `${colorSection2Pos.y}px` }}>
+          <ColorSection2 ref={colorSection2Ref} style={{ left: `${colorSection2Pos.x}px`, top: `${colorSection2Pos.y}px` }}>
             <H2_400>
               인스타그램<br/>
               바로가기
