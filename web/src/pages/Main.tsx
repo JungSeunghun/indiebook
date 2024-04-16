@@ -1,7 +1,8 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styled from '@emotion/styled';
+import {H2_400} from "../style/Style";
 
 const Main = styled.main`
   max-width: 1136px;
@@ -22,11 +23,8 @@ const NormalSection = styled.div`
   border: 1px solid black;
   width: fit-content;
   border-radius: 20px;
-  padding: 5px 10px;
+  padding: 8px 16px;
   position: absolute;
-  top: 30%;
-  left: 40%;
-  transform: translate(-50%, -50%);
 `;
 
 const ColorSection1 = styled.div`
@@ -34,12 +32,9 @@ const ColorSection1 = styled.div`
   border: 1px solid black;
   border-radius: 20px;  
   width: fit-content;
-  padding: 5px 10px;
+  padding: 8px 16px;
   color: white;
   position: absolute;
-  top: 70%;
-  left: 40%;
-  transform: translate(-50%, -50%);
 `;
 
 const ColorSection2 = styled.div`
@@ -47,33 +42,31 @@ const ColorSection2 = styled.div`
   border: 1px solid black;
   border-radius: 20px;  
   width: fit-content;
-  padding: 5px 10px;
+  padding: 8px 16px;
   color: white;
   position: absolute;
-  top: 70%;
-  left: 60%;
-  transform: translate(-50%, -50%);
 `;
 
-interface Position {
-  x: number;
-  y: number;
-}
-
-interface Velocity {
-  vx: number;
-  vy: number;
-}
+const Link = styled.a`
+`;
 
 interface State {
-  position: Position;
-  velocity: Velocity;
+  position: {
+    x: number;
+    y: number;
+  };
+  velocity: {
+    vx: number;
+    vy: number;
+  };
   width: number;
+  height: number;
 }
 
-type Action = {
-  type: 'MOVE';
-};
+interface Action {
+  type: 'MOVE' | 'UPDATE_DIMENSIONS';
+  payload?: { width: number; height: number };
+}
 
 function movementReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -83,11 +76,13 @@ function movementReducer(state: State, action: Action): State {
       let newVx = state.velocity.vx;
       let newVy = state.velocity.vy;
 
-      if (newX <= 0 || newX >= window.innerWidth - state.width) {
+      if (newX <= 0 || newX + state.width >= document.body.offsetWidth) {
         newVx = -newVx;
+        newX = newX <= 0 ? 0 : document.body.offsetWidth - state.width;
       }
-      if (newY <= 0 || newY >= 1134 - state.width) {
+      if (newY <= 0 || newY + state.height >= 1134) {
         newVy = -newVy;
+        newY = newY <= 0 ? 0 : 1134 - state.height;
       }
 
       return {
@@ -95,23 +90,40 @@ function movementReducer(state: State, action: Action): State {
         position: { x: newX, y: newY },
         velocity: { vx: newVx, vy: newVy },
       };
+    case 'UPDATE_DIMENSIONS':
+      if (action.payload) {
+        return {
+          ...state,
+          width: action.payload.width,
+          height: action.payload.height,
+        };
+      }
+      return state;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
 }
 
-function useRandomMovement(initialX: number, initialY: number, initialWidth: number) {
-  // 화면의 중앙을 계산
-  const centerX = window.innerWidth / 2;
+function useRandomMovement(initialX: number, initialY: number, speedFactor: number = 1) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   const [state, dispatch] = useReducer(movementReducer, {
-    position: { x: centerX + initialX, y:  initialY },
+    position: { x: initialX, y: initialY },
     velocity: {
-      vx: Math.random() * 0.4 - 0.2, // 속도는 그대로 유지
-      vy: Math.random() * 0.4 - 0.2,
+      vx: (Math.random() * 0.4 - 0.2) * speedFactor,
+      vy: (Math.random() * 0.4 - 0.2) * speedFactor,
     },
-    width: initialWidth,
+    ...dimensions,
   });
+
+  useEffect(() => {
+    if (ref.current) {
+      const { offsetWidth, offsetHeight } = ref.current;
+      setDimensions({ width: offsetWidth, height: offsetHeight });
+      dispatch({ type: 'UPDATE_DIMENSIONS', payload: { width: offsetWidth, height: offsetHeight } });
+    }
+  }, [ref.current]);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -126,17 +138,14 @@ function useRandomMovement(initialX: number, initialY: number, initialWidth: num
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  return { position: state.position, width: state.width };
+  return { ref, position: state.position, ...dimensions };
 }
 
 interface MovableComponentProps {
-  width: number;
   color: string;
 }
 
 const MovableComponent = styled.div<MovableComponentProps>`
-  width: ${props => `${props.width}px`};
-  height: ${props => `${props.width}px`};
   position: absolute;
   background-color: ${props => props.color};
   border-radius: 50%;
@@ -144,37 +153,47 @@ const MovableComponent = styled.div<MovableComponentProps>`
 `;
 
 const SubscribePage: React.FC = () => {
-  const { position: yellowCircle1Pos, width: yellowCircle1Width } = useRandomMovement(-500, 100, 256);
-  const { position: whiteCircle1Pos, width: whiteCircle1Width } = useRandomMovement(-400, 225, 256);
-  const { position: yellowCircle2Pos, width: yellowCircle2Width } = useRandomMovement(400, 300, 128);
-  const { position: whiteCircle2Pos, width: whiteCircle2Width } = useRandomMovement(250, 350, 256);
+  const { ref: yellowCircle1Ref, position: yellowCircle1Pos } = useRandomMovement(500, 450, 0);
+  const { ref: whiteCircle1Ref, position: whiteCircle1Pos } = useRandomMovement(600, 550, 0);
+  const { ref: yellowCircle2Ref, position: yellowCircle2Pos } = useRandomMovement(1400, 350, 0);
+  const { ref: whiteCircle2Ref, position: whiteCircle2Pos } = useRandomMovement(1250, 400, 0);
 
-  const { position: normalSectionPos } = useRandomMovement(-200, 200, 200); // NormalSection 컴포넌트용
-  const { position: colorSection1Pos } = useRandomMovement(-200, 600, 200); // ColorSection1 컴포넌트용
-  const { position: colorSection2Pos } = useRandomMovement(200, 600, 200); // ColorSection2 컴포넌트용
+  const { position: normalSectionPos } = useRandomMovement(450, 200, 20);
+  const { position: colorSection1Pos } = useRandomMovement(450, 900,  20);
+  const { position: colorSection2Pos } = useRandomMovement(1200, 900, 20);
 
   return (
     <div>
       <Header/>
       <Main>
-        <MovableComponent style={{ left: `${yellowCircle1Pos.x}px`, top: `${yellowCircle1Pos.y}px` }} color="#FFB443" width={yellowCircle1Width}/>
-        <MovableComponent style={{ left: `${whiteCircle1Pos.x}px`, top: `${whiteCircle1Pos.y}px` }} color="#FFFFFF" width={whiteCircle1Width}/>
-        <MovableComponent style={{ left: `${yellowCircle2Pos.x}px`, top: `${yellowCircle2Pos.y}px` }} color="#FFB443" width={yellowCircle2Width}/>
-        <MovableComponent style={{ left: `${whiteCircle2Pos.x}px`, top: `${whiteCircle2Pos.y}px` }} color="#FFFFFF" width={whiteCircle2Width}/>
+        <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}px`, top: `${yellowCircle1Pos.y}px`, width: "256px", height: "256px" }} color="#FFB443"/>
+        <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}px`, top: `${whiteCircle1Pos.y}px`, width: "256px", height: "256px" }} color="#FFFFFF"/>
+        <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}px`, top: `${yellowCircle2Pos.y}px`, width: "128px", height: "128px" }} color="#FFB443"/>
+        <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}px`, top: `${whiteCircle2Pos.y}px`, width: "256px", height: "256px" }} color="#FFFFFF"/>
         <MainPageLogo src={'/logo/main_page_logo.svg'}/>
         <NormalSection style={{ left: `${normalSectionPos.x}px`, top: `${normalSectionPos.y}px` }}>
-          공지사항<br/>
-          날짜: 24.04.20<br/><br/>
-          글조명 1.0ver 홈페이지 오픈~!
+          <H2_400>
+            공지사항<br/>
+            날짜: 24.04.20<br/><br/>
+            글조명 1.0ver 홈페이지 오픈~!
+          </H2_400>
         </NormalSection>
-        <ColorSection1 style={{ left: `${colorSection1Pos.x}px`, top: `${colorSection1Pos.y}px` }}>
-          글조명 인스타 팔로우하고<br/>
-          나만의 꽃 그림 받아가세요~
-        </ColorSection1>
-        <ColorSection2 style={{ left: `${colorSection2Pos.x}px`, top: `${colorSection2Pos.y}px` }}>
-          인스타그램<br/>
-          바로가기
-        </ColorSection2>
+        <Link href={'https://www.instagram.com/writing.lighting?igsh=c2RmM3V6eHpuNGc2&utm_source=qr'} target={'_blank'}>
+          <ColorSection1 style={{ left: `${colorSection1Pos.x}px`, top: `${colorSection1Pos.y}px` }}>
+            <H2_400>
+              글조명 인스타 팔로우하고<br/>
+              나만의 꽃 그림 받아가세요~
+            </H2_400>
+          </ColorSection1>
+        </Link>
+        <Link href={'https://www.instagram.com/writing.lighting?igsh=c2RmM3V6eHpuNGc2&utm_source=qr'} target={'_blank'}>
+          <ColorSection2 style={{ left: `${colorSection2Pos.x}px`, top: `${colorSection2Pos.y}px` }}>
+            <H2_400>
+              인스타그램<br/>
+              바로가기
+            </H2_400>
+          </ColorSection2>
+        </Link>
       </Main>
       <Footer/>
     </div>

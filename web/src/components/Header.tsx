@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from "@emotion/styled"
-import { AiOutlineMenu, AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
+import {AiOutlineMenu, AiOutlineClose, AiOutlineSearch} from 'react-icons/ai';
+import {B1_600} from "../style/Style";
 
 const Base = styled.header`
   background: #ffffff;
@@ -50,32 +51,42 @@ const MenuButton = styled.div`
 
 const Link = styled.a`
   text-decoration: none;
+  color: black;
+`;
+
+const HomeLink = styled.a`
+  text-decoration: none;
+  color: #FFB443
 `;
 
 const MainHeader = () => {
-    return (
-        <Base>
-            <Navigation>
-                <Link href="/">
-                    <Logo src={'logo/header_logo.svg'}/>
-                </Link>
-                <MenuList>
-                    <Menu>
-                        <Link href="/">
-                            홈
-                        </Link>
-                    </Menu>
-                    <Menu>
-                        <Link href="/subscribe">
-                            <MenuButton>
-                                구독
-                            </MenuButton>
-                        </Link>
-                    </Menu>
-                </MenuList>
-            </Navigation>
-        </Base>
-    );
+  return (
+    <Base>
+      <Navigation>
+        <Link href="/">
+          <Logo src={'logo/header_logo.svg'}/>
+        </Link>
+        <MenuList>
+          <Menu>
+            <HomeLink href="/">
+              <B1_600>
+                홈
+              </B1_600>
+            </HomeLink>
+          </Menu>
+          <Menu>
+            <Link href="/subscribe">
+              <MenuButton>
+                <B1_600>
+                  구독
+                </B1_600>
+              </MenuButton>
+            </Link>
+          </Menu>
+        </MenuList>
+      </Navigation>
+    </Base>
+  );
 };
 
 export default MainHeader;
