@@ -47,6 +47,7 @@ const MenuButton = styled.div`
   height: 40px;
   border-radius: 20px;
   background-color: #FFB443;
+  cursor: pointer;
 `;
 
 const Link = styled.a`
@@ -60,6 +61,11 @@ const HomeLink = styled.a`
 `;
 
 const MainHeader = () => {
+
+  const handleSubscribeClick = () => {
+    alert('준비 중입니다.');
+  };
+
   return (
     <Base>
       <Navigation>
@@ -75,8 +81,8 @@ const MainHeader = () => {
             </HomeLink>
           </Menu>
           <Menu>
-            <Link href="/subscribe">
-              <MenuButton>
+            <Link>
+              <MenuButton onClick={handleSubscribeClick}>
                 <B1_600>
                   구독
                 </B1_600>

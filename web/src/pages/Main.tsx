@@ -25,6 +25,16 @@ const NormalSection = styled.div`
   border-radius: 20px;
   padding: 8px 16px;
   position: absolute;
+  
+  font-size: 1.875rem;
+  line-height: 40px;
+  letter-spacing: -0.02rem;
+  margin: 0;
+  font-weight: 400;
+  
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const ColorSection1 = styled.div`
@@ -35,6 +45,16 @@ const ColorSection1 = styled.div`
   padding: 8px 16px;
   color: white;
   position: absolute;
+
+  font-size: 1.875rem;
+  line-height: 40px;
+  letter-spacing: -0.02rem;
+  margin: 0;
+  font-weight: 400;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const ColorSection2 = styled.div`
@@ -45,6 +65,16 @@ const ColorSection2 = styled.div`
   padding: 8px 16px;
   color: white;
   position: absolute;
+
+  font-size: 1.875rem;
+  line-height: 40px;
+  letter-spacing: -0.02rem;
+  margin: 0;
+  font-weight: 400;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const Link = styled.a`
@@ -76,13 +106,13 @@ function movementReducer(state: State, action: Action): State {
       let newVx = state.velocity.vx;
       let newVy = state.velocity.vy;
 
-      if (newX <= 0 || newX + state.width >= document.body.offsetWidth) {
+      if (newX <= 0 || newX + (state.width / document.body.offsetWidth * 100) >= 100) {
         newVx = -newVx;
-        newX = newX <= 0 ? 0 : document.body.offsetWidth - state.width;
+        newX = newX <= 0 ? 0 : 100 - (state.width / document.body.offsetWidth * 100);
       }
-      if (newY <= 0 || newY + state.height >= 1194) {
+      if (newY <= 0 || newY + (state.height / 1194 * 100) >= 100) {
         newVy = -newVy;
-        newY = newY <= 0 ? 0 : 1194 - state.height;
+        newY = newY <= 0 ? 0 : 100 - (state.height / 1194 * 100);
       }
 
       return {
@@ -153,45 +183,39 @@ const MovableComponent = styled.div<MovableComponentProps>`
 `;
 
 const SubscribePage: React.FC = () => {
-  const { ref: yellowCircle1Ref, position: yellowCircle1Pos } = useRandomMovement(500, 450, 0);
-  const { ref: whiteCircle1Ref, position: whiteCircle1Pos } = useRandomMovement(600, 550, 0);
-  const { ref: yellowCircle2Ref, position: yellowCircle2Pos } = useRandomMovement(1400, 350, 0);
-  const { ref: whiteCircle2Ref, position: whiteCircle2Pos } = useRandomMovement(1250, 400, 0);
+  const { ref: yellowCircle1Ref, position: yellowCircle1Pos } = useRandomMovement(25, 25, 0.5);
+  const { ref: whiteCircle1Ref, position: whiteCircle1Pos } = useRandomMovement(30, 30, 0.5);
+  const { ref: yellowCircle2Ref, position: yellowCircle2Pos } = useRandomMovement(60, 25, 0.5);
+  const { ref: whiteCircle2Ref, position: whiteCircle2Pos } = useRandomMovement(55, 30, 0.5);
 
-  const { ref: normalSectionRef, position: normalSectionPos } = useRandomMovement(450, 200, 20);
-  const { ref: colorSection1Ref, position: colorSection1Pos } = useRandomMovement(450, 900,  20);
-  const { ref: colorSection2Ref, position: colorSection2Pos } = useRandomMovement(1200, 900, 20);
+  const { ref: normalSectionRef, position: normalSectionPos } = useRandomMovement(20, 10, 0.1);
+  const { ref: colorSection1Ref, position: colorSection1Pos } = useRandomMovement(20, 60,  0.1);
+  const { ref: colorSection2Ref, position: colorSection2Pos } = useRandomMovement(60, 60, 0.1);
 
   return (
     <div>
       <Header/>
       <Main>
-        <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}px`, top: `${yellowCircle1Pos.y}px`, width: "16rem", height: "16rem" }} color="#FFB443"/>
-        <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}px`, top: `${whiteCircle1Pos.y}px`, width: "16rem", height: "16rem" }} color="#FFFFFF"/>
-        <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}px`, top: `${yellowCircle2Pos.y}px`, width: "8rem", height: "8rem" }} color="#FFB443"/>
-        <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}px`, top: `${whiteCircle2Pos.y}px`, width: "16rem", height: "16rem" }} color="#FFFFFF"/>
+        <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}%`, top: `${yellowCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFB443"/>
+        <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}%`, top: `${whiteCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
+        <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}%`, top: `${yellowCircle2Pos.y}%`, width: "128px", height: "128px" }} color="#FFB443"/>
+        <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}%`, top: `${whiteCircle2Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
         <MainPageLogo src={'/logo/main_page_logo.svg'}/>
-        <NormalSection ref={normalSectionRef} style={{ left: `${normalSectionPos.x}px`, top: `${normalSectionPos.y}px` }}>
-          <H2_400>
-            공지사항<br/>
-            날짜: 24.04.20<br/><br/>
-            글조명 1.0ver 홈페이지 오픈~!
-          </H2_400>
+        <NormalSection ref={normalSectionRef} style={{ left: `${normalSectionPos.x}%`, top: `${normalSectionPos.y}%` }}>
+          공지사항<br/>
+          날짜: 24.04.20<br/><br/>
+          글조명 1.0ver 홈페이지 오픈~!
         </NormalSection>
         <Link href={'https://www.instagram.com/writing.lighting?igsh=c2RmM3V6eHpuNGc2&utm_source=qr'} target={'_blank'}>
-          <ColorSection1 ref={colorSection1Ref} style={{ left: `${colorSection1Pos.x}px`, top: `${colorSection1Pos.y}px` }}>
-            <H2_400>
-              글조명 인스타 팔로우하고<br/>
-              나만의 꽃 그림 받아가세요~
-            </H2_400>
+          <ColorSection1 ref={colorSection1Ref} style={{ left: `${colorSection1Pos.x}%`, top: `${colorSection1Pos.y}%` }}>
+            글조명 인스타 팔로우하고<br/>
+            나만의 꽃 그림 받아가세요~
           </ColorSection1>
         </Link>
         <Link href={'https://www.instagram.com/writing.lighting?igsh=c2RmM3V6eHpuNGc2&utm_source=qr'} target={'_blank'}>
-          <ColorSection2 ref={colorSection2Ref} style={{ left: `${colorSection2Pos.x}px`, top: `${colorSection2Pos.y}px` }}>
-            <H2_400>
-              인스타그램<br/>
-              바로가기
-            </H2_400>
+          <ColorSection2 ref={colorSection2Ref} style={{ left: `${colorSection2Pos.x}%`, top: `${colorSection2Pos.y}%` }}>
+            인스타그램<br/>
+            바로가기
           </ColorSection2>
         </Link>
       </Main>
