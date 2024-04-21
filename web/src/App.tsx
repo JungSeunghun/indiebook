@@ -10,7 +10,7 @@ function App() {
       <Helmet>
         <meta property="og:title" content="글조명" />
         <meta property="og:description" content="글을 조명하다." />
-        <meta property="og:image" content="/logo/header_logo.svg" />
+        <meta property="og:image" content="/logo.png" />
       </Helmet>
       <Router>
         <ScrollToTop/>
