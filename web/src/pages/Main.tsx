@@ -110,9 +110,9 @@ function movementReducer(state: State, action: Action): State {
         newVx = -newVx;
         newX = newX <= 0 ? 0 : 100 - (state.width / document.body.offsetWidth * 100);
       }
-      if (newY <= 0 || newY + (state.height / 1194 * 100) >= 100) {
+      if (newY <= 0 || newY + (state.height / document.body.offsetHeight * 100) >= 100) {
         newVy = -newVy;
-        newY = newY <= 0 ? 0 : 100 - (state.height / 1194 * 100);
+        newY = newY <= 0 ? 0 : 100 - (state.height / document.body.offsetHeight * 100);
       }
 
       return {
@@ -182,7 +182,7 @@ const MovableComponent = styled.div<MovableComponentProps>`
   opacity: 0.5;
 `;
 
-const SubscribePage: React.FC = () => {
+const MainPage: React.FC = () => {
   const { ref: yellowCircle1Ref, position: yellowCircle1Pos } = useRandomMovement(25, 25, 0.5);
   const { ref: whiteCircle1Ref, position: whiteCircle1Pos } = useRandomMovement(30, 30, 0.5);
   const { ref: yellowCircle2Ref, position: yellowCircle2Pos } = useRandomMovement(60, 25, 0.5);
@@ -194,25 +194,25 @@ const SubscribePage: React.FC = () => {
 
   return (
     <div>
+      <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}%`, top: `${yellowCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFB443"/>
+      <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}%`, top: `${whiteCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
+      <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}%`, top: `${yellowCircle2Pos.y}%`, width: "128px", height: "128px" }} color="#FFB443"/>
+      <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}%`, top: `${whiteCircle2Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
       <Header/>
       <Main>
-        <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}%`, top: `${yellowCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFB443"/>
-        <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}%`, top: `${whiteCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
-        <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}%`, top: `${yellowCircle2Pos.y}%`, width: "128px", height: "128px" }} color="#FFB443"/>
-        <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}%`, top: `${whiteCircle2Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
         <MainPageLogo src={'/logo/main_page_logo.svg'}/>
         <NormalSection ref={normalSectionRef} style={{ left: `${normalSectionPos.x}%`, top: `${normalSectionPos.y}%` }}>
           공지사항<br/>
           날짜: 24.04.20<br/><br/>
           글조명 1.0ver 홈페이지 오픈~!
         </NormalSection>
-        <Link href={'https://www.instagram.com/writing.lighting?igsh=c2RmM3V6eHpuNGc2&utm_source=qr'} target={'_blank'}>
+        <Link href={'https://www.instagram.com/textlamp'} target={'_blank'}>
           <ColorSection1 ref={colorSection1Ref} style={{ left: `${colorSection1Pos.x}%`, top: `${colorSection1Pos.y}%` }}>
             글조명 인스타 팔로우하고<br/>
             나만의 꽃 그림 받아가세요~
           </ColorSection1>
         </Link>
-        <Link href={'https://www.instagram.com/writing.lighting?igsh=c2RmM3V6eHpuNGc2&utm_source=qr'} target={'_blank'}>
+        <Link href={'https://www.instagram.com/textlamp'} target={'_blank'}>
           <ColorSection2 ref={colorSection2Ref} style={{ left: `${colorSection2Pos.x}%`, top: `${colorSection2Pos.y}%` }}>
             인스타그램<br/>
             바로가기
@@ -224,4 +224,4 @@ const SubscribePage: React.FC = () => {
   );
 };
 
-export default SubscribePage;
+export default MainPage;
