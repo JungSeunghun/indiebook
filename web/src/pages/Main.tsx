@@ -1,8 +1,7 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import styled from '@emotion/styled';
-import {H2_400} from "../style/Style";
+import styled from "styled-components";
 
 const Main = styled.main`
   max-width: 1136px;
@@ -19,8 +18,8 @@ const MainPageLogo = styled.img`
 `;
 
 const NormalSection = styled.div`
-  background-color: #FFFFFF;
-  border: 1px solid black;
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid ${({ theme }) => theme.colors.black};
   width: fit-content;
   border-radius: 20px;
   padding: 8px 16px;
@@ -38,8 +37,8 @@ const NormalSection = styled.div`
 `;
 
 const ColorSection1 = styled.div`
-  background-color: #FFB443;
-  border: 1px solid black;
+  background-color: ${({ theme }) => theme.colors.primary};
+  border: 1px solid ${({ theme }) => theme.colors.black};
   border-radius: 20px;  
   width: fit-content;
   padding: 8px 16px;
@@ -58,8 +57,8 @@ const ColorSection1 = styled.div`
 `;
 
 const ColorSection2 = styled.div`
-  background-color: #FFB443;
-  border: 1px solid black;
+  background-color: ${({ theme }) => theme.colors.primary};
+  border: 1px solid ${({ theme }) => theme.colors.black};
   border-radius: 20px;  
   width: fit-content;
   padding: 8px 16px;

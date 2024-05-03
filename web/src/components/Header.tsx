@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import styled from "@emotion/styled"
-import {AiOutlineMenu, AiOutlineClose, AiOutlineSearch} from 'react-icons/ai';
-import {B1_600} from "../style/Style";
+import React from 'react';
+import styled from "styled-components";
+import {B1_600} from "../style/FontStyle";
+
 
 const Base = styled.header`
-  background: #ffffff;
+  background: ${({ theme }) => theme.colors.white};
   text-align: center;
   width: 100%;
   height: 60px;
@@ -46,18 +46,18 @@ const MenuButton = styled.div`
   width: 80px;
   height: 40px;
   border-radius: 20px;
-  background-color: #FFB443;
+  background-color: ${({ theme }) => theme.colors.primary};
   cursor: pointer;
 `;
 
 const Link = styled.a`
   text-decoration: none;
-  color: black;
+  color: ${({ theme }) => theme.colors.black};
 `;
 
 const HomeLink = styled.a`
   text-decoration: none;
-  color: #FFB443
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const MainHeader = () => {

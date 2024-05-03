@@ -1,10 +1,10 @@
 import React from 'react';
-import styled from "@emotion/styled"
-import {B1_600, B2_400} from "../style/Style";
+import styled from "styled-components";
+import {B1_600, B2_400} from "../style/FontStyle";
 
 const Base = styled.footer`
   display: block;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
 `;
 
@@ -12,7 +12,7 @@ const Section = styled.section`
   margin: 0 auto;
   max-width: 1136px;
   height: 172px;
-  background-color: #FFB443;
+  background-color: ${({ theme }) => theme.colors.primary};
 `;
 
 const Container = styled.section`
@@ -30,7 +30,7 @@ const FooterIcon = styled.div`
   margin: 16px 0;
 `;
 const Link = styled.a`
-  color: #000000;
+  color: ${({ theme }) => theme.colors.black};
 `;
 
 const Footer: React.FC = () => {
