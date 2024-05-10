@@ -61,7 +61,10 @@ const HeaderLogo = styled.img`
 `;
 
 const BookImage = styled.img`
-  width: 50%;
+  width: 30%;
+  @media (max-width: 768px) {
+    width: 50%;
+  }
 `;
 
 type Option = {
@@ -285,6 +288,7 @@ const MagicLibrary: React.FC = () => {
   const [subTheme, setSubTheme] = useState<string>('');
   const [recommendedBook, setRecommendedBook] = useState<BookInfo | null>(null);
   const [showStage, setShowStage] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setShowStage(true);
@@ -339,12 +343,22 @@ const MagicLibrary: React.FC = () => {
     fetchData();
   };
 
+  const handleRestart = () => {
+    setGender('');
+    setAge('');
+    setTheme('');
+    setSubTheme('');
+    setRecommendedBook(null);
+    setStage(0);
+  };
+
   const fetchData = async () => {
+    setIsLoading(true);
     const authKey = '87cbd6deab665aa0aa1eeedf22989f704cdb80de75d703a46ce6229786e037fc';
     const startDt = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10);
     const endDt = new Date().toISOString().slice(0, 10);
 
-    const url = `http://data4library.kr/api/loanItemSrch?authKey=${authKey}&startDt=${startDt}&endDt=${endDt}&gender=${gender}&age=${age}&kdc=${theme}&dtl_kdc=${subTheme}&format=json&pageSize=10`;
+    const url = `http://data4library.kr/api/loanItemSrch?authKey=${authKey}&startDt=${startDt}&endDt=${endDt}&gender=${gender}&age=${age}&kdc=${theme}&dtl_kdc=${subTheme}&format=json&pageSize=15`;
 
     try {
       const response = await fetch(url);
@@ -367,6 +381,8 @@ const MagicLibrary: React.FC = () => {
     } catch (error) {
       console.error("Error fetching data: ", error);
       setRecommendedBook(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -434,20 +450,21 @@ const MagicLibrary: React.FC = () => {
         {stage === 5 && (
           <>
             <Heading>당신이 평생 한권만 읽을 수 있다면</Heading>
-            {recommendedBook ? (
+            {isLoading ? (
+              <Description>Loading...</Description>
+            ) : recommendedBook ? (
               <div>
                 <BookImage src={recommendedBook.imageUrl} alt="Recommended Book" />
                 <Description>
                   {recommendedBook.name} by {recommendedBook.authors}, {recommendedBook.publisher}
                 </Description>
+                <Button onClick={handleRestart}>Restart</Button>
               </div>
             ) : (
               <Description>No recommendation available.</Description>
             )}
-            <Button onClick={() => setStage(0)}>Restart</Button>
           </>
         )}
-
       </Container>
     </Main>
   );
