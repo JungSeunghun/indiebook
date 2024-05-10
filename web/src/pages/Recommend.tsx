@@ -11,8 +11,8 @@ const Main = styled.main`
   background-color: beige;
 `;
 
-const Container = styled.div<{ show?: boolean }>`
-  opacity: ${props => (props.show ? 1 : 0)};
+const Container = styled.div<{ show?: string }>`
+  opacity: ${props => props.show === "true" ? "1" : "0"};
   transition: opacity 0.5s ease-in-out;
 `;
 
@@ -60,39 +60,221 @@ const HeaderLogo = styled.img`
   }
 `;
 
+const BookImage = styled.img`
+  width: 50%;
+`;
+
+type Option = {
+  label: string;
+  value: string;
+};
+
+const genderOptions = [
+  { label: '남성', value: '0' },
+  { label: '여성', value: '1' },
+  { label: '그 외', value: '2' }
+];
+
+const ageOptions = [
+  { label: '10대', value: '14' },
+  { label: '20대', value: '20' },
+  { label: '30대', value: '30' },
+  { label: '40대', value: '40' },
+  { label: '50대', value: '50' },
+  { label: '60대 이상', value: '60' },
+];
+
 type SelectOptionProps = {
-  options: string[];
-  onSelect: (option: string) => void;
+  options: Option[];
+  onSelect: (value: string) => void;
 };
 
 const SelectOption: React.FC<SelectOptionProps> = ({ options, onSelect }) => {
   return (
     <div>
       {options.map((option) => (
-        <Button key={option} onClick={() => onSelect(option)}>
-          {option}
+        <Button key={option.value} onClick={() => onSelect(option.value)}>
+          {option.label}
         </Button>
       ))}
     </div>
   );
 };
 
-
-type ThemeOptions = {
-  [key: string]: string[];
+type TopicMapping = {
+  [id: string]: {
+    name: string;
+    subtopics: Option[];
+  }
 };
 
-const themeOptions: ThemeOptions = {
-  총류: ["총류", "도서학", "문헌정보학", "백과사전", "일반 논문집", "일반 연속간행물", "학·협회, 기관", "신문, 언론, 저널리즘", "일반 전집, 총서", "향토자료"],
-  철학: ["철학", "형이상학", "인식론, 인과론, 인간학", "철학의 체계", "경학", "동양 철학, 사상", "서양철학", "논리학", "심리학", "윤리학, 도덕철학"],
-  종교: ["종교", "비교종교학", "불교", "기독교", "도교", "천도교", "신도", "바라문교, 인도교", "회교(이슬람교)", "기타 제종교"],
-  사회과학: ["사회과학", "통계학", "경제학", "사회학, 사회문제", "정치학", "행정학", "법학", "교육학", "풍속, 민속학", "국방, 군사학"],
-  자연과학: ["자연과학", "수학", "물리학", "화학", "천문학", "지학", "광물학", "생물과학", "식물학", "동물학"],
-  기술과학: ["기술과학", "의학", "농업, 농학", "공학, 공업일반", "건축공학", "기계공학", "전기공학, 전자공학", "화학공학", "제조업", "가정학 및 가정생활"],
-  예술: ["예술", "건축술", "조각", "공예, 장식미술", "서예", "회화, 도화", "사진술", "음악", "연극", "오락, 운동"],
-  언어: ["언어", "한국어", "중국어", "일본어", "영어", "독일어", "프랑스어", "스페인어", "이탈리아어", "기타 제어"],
-  문학: ["문학", "한국문학", "중국문학", "일본문학", "영미문학", "독일문학", "프랑스문학", "스페인문학", "이탈리아문학", "기타 제문학"],
-  역사: ["역사", "아시아(아세아)", "유럽(구라파)", "아프리카", "북아메리카(북미)", "남아메리카(남미)", "오세아니아(대양주)", "양극지방", "지리", "전기"],
+const topicMapping: TopicMapping = {
+  "0": {
+    name: "총류",
+    subtopics: [
+      { label: "총류", value: "00" },
+      { label: "도서학, 서지학", value: "01" },
+      { label: "문헌정보학", value: "02" },
+      { label: "백과사전", value: "03" },
+      { label: "일반 논문집", value: "04" },
+      { label: "일반 연속간행물", value: "05" },
+      { label: "학·협회, 기관", value: "06" },
+      { label: "신문, 언론, 저널리즘", value: "07" },
+      { label: "일반 전집, 총서", value: "08" },
+      { label: "향토자료", value: "09" }
+    ]
+  },
+  "1": {
+    name: "철학",
+    subtopics: [
+      { label: "철학", value: "10" },
+      { label: "형이상학", value: "11" },
+      { label: "인식론, 인과론, 인간학", value: "12" },
+      { label: "철학의 체계", value: "13" },
+      { label: "경학", value: "14" },
+      { label: "동양 철학, 사상", value: "15" },
+      { label: "서양철학", value: "16" },
+      { label: "논리학", value: "17" },
+      { label: "심리학", value: "18" },
+      { label: "윤리학, 도덕철학", value: "19" }
+    ]
+  },
+  "2": {
+    name: "종교",
+    subtopics: [
+      { label: "종교", value: "20" },
+      { label: "비종교학", value: "21" },
+      { label: "불교", value: "22" },
+      { label: "기도교", value: "23" },
+      { label: "도교", value: "24" },
+      { label: "천도교", value: "25" },
+      { label: "신도", value: "26" },
+      { label: "바라문교, 인도교", value: "27" },
+      { label: "회교(이슬람교", value: "28" },
+      { label: "기타 제종교", value: "29" }
+    ]
+  },
+  "3": {
+    name: "사회과학",
+    subtopics: [
+      { label: "사회과학", value: "30" },
+      { label: "통계학", value: "31" },
+      { label: "경제학", value: "32" },
+      { label: "사회학, 사회문제", value: "33" },
+      { label: "정치학", value: "34" },
+      { label: "행정학", value: "35" },
+      { label: "법학", value: "36" },
+      { label: "교육학", value: "37" },
+      { label: "풍속, 민속학", value: "38" },
+      { label: "국방, 군사학", value: "39" }
+    ]
+  },
+  "4": {
+    name: "자연과학",
+    subtopics: [
+      { label: "자연과학", value: "40" },
+      { label: "수학", value: "41" },
+      { label: "물리학", value: "42" },
+      { label: "화학", value: "43" },
+      { label: "천문학", value: "44" },
+      { label: "지학", value: "45" },
+      { label: "광물학", value: "46" },
+      { label: "생물과학", value: "47" },
+      { label: "식물학", value: "48" },
+      { label: "동물학", value: "49" }
+    ]
+  },
+  "5": {
+    name: "기술과학",
+    subtopics: [
+      { label: "기술과학", value: "50" },
+      { label: "의학", value: "51" },
+      { label: "농업, 농학", value: "52" },
+      { label: "공학, 공업일반", value: "53" },
+      { label: "건축공학", value: "54" },
+      { label: "기계공학", value: "55" },
+      { label: "전기공학, 전자공학", value: "56" },
+      { label: "화학공학", value: "57" },
+      { label: "제조업", value: "58" },
+      { label: "가정학 및 가정생활", value: "59" }
+    ]
+  },
+  "6": {
+    name: "예술",
+    subtopics: [
+      { label: "예술", value: "60" },
+      { label: "건축술", value: "61" },
+      { label: "조각", value: "62" },
+      { label: "공예, 장식미술", value: "63" },
+      { label: "서예", value: "64" },
+      { label: "회화, 도화", value: "65" },
+      { label: "사진술", value: "66" },
+      { label: "음악", value: "67" },
+      { label: "연극", value: "68" },
+      { label: "오락, 운동", value: "69" }
+    ]
+  },
+  "7": {
+    name: "언어",
+    subtopics: [
+      { label: "언어", value: "70" },
+      { label: "한국어", value: "71" },
+      { label: "중국어", value: "72" },
+      { label: "일본어", value: "73" },
+      { label: "영어", value: "74" },
+      { label: "독일어", value: "75" },
+      { label: "프랑스어", value: "76" },
+      { label: "스페인어", value: "77" },
+      { label: "이탈리아어", value: "78" },
+      { label: "기타 제어", value: "79" }
+    ]
+  },
+  "8": {
+    name: "문학",
+    subtopics: [
+      { label: "문학", value: "80" },
+      { label: "한국문학", value: "81" },
+      { label: "중국문학", value: "82" },
+      { label: "일본문학", value: "83" },
+      { label: "영미문학", value: "84" },
+      { label: "독일문학", value: "85" },
+      { label: "프랑스문학", value: "86" },
+      { label: "스페인문학", value: "87" },
+      { label: "이탈리아문학", value: "88" },
+      { label: "기타 제문학", value: "89" }
+    ]
+  },
+  "9": {
+    name: "역사",
+    subtopics: [
+      { label: "역사", value: "90" },
+      { label: "아시아(아세아)", value: "91" },
+      { label: "유럽(구라파)", value: "92" },
+      { label: "아프리카", value: "93" },
+      { label: "북아메리카(북미)", value: "94" },
+      { label: "남아메리카(남미)", value: "95" },
+      { label: "오세아니아(대양주)", value: "96" },
+      { label: "양극지방", value: "97" },
+      { label: "지리", value: "98" },
+      { label: "전기", value: "99" }
+    ]
+  }
+};
+
+type BookInfo = {
+  name: string;
+  authors: string;
+  publisher: string;
+  imageUrl: string;
+};
+
+const getTopicOptions = () => Object.keys(topicMapping).map(key => ({
+  label: topicMapping[key].name,
+  value: key
+}));
+
+const getSubtopicOptions = (themeKey: string) => {
+  return topicMapping[themeKey]?.subtopics || [];
 };
 
 const MagicLibrary: React.FC = () => {
@@ -101,12 +283,25 @@ const MagicLibrary: React.FC = () => {
   const [age, setAge] = useState<string>('');
   const [theme, setTheme] = useState<string>('');
   const [subTheme, setSubTheme] = useState<string>('');
-  const [recommendedBook, setRecommendedBook] = useState<string>('');
+  const [recommendedBook, setRecommendedBook] = useState<BookInfo | null>(null);
   const [showStage, setShowStage] = useState<boolean>(false);
 
   useEffect(() => {
     setShowStage(true);
   }, [stage]);
+
+  useEffect(() => {
+    if (subTheme) {
+      recommendBook();
+    }
+  }, [subTheme]);
+
+  const startStage = () => {
+    setShowStage(false);
+    setTimeout(() => {
+      setStage(1);
+    }, 500);
+  }
 
   const handleSelectGender = (selectedGender: string) => {
     setGender(selectedGender);
@@ -129,7 +324,6 @@ const MagicLibrary: React.FC = () => {
     setShowStage(false);
     setTimeout(() => {
       setStage(4);
-      recommendBook(selectedTheme);
     }, 500);
   };
 
@@ -137,21 +331,52 @@ const MagicLibrary: React.FC = () => {
     setSubTheme(selectedSubTheme);
     setShowStage(false);
     setTimeout(() => {
-      recommendBook(selectedSubTheme);
       setStage(5);
     }, 500);
   };
 
-  const recommendBook = (theme: string) => {
-    setRecommendedBook(`책!!`);
+  const recommendBook = () => {
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const authKey = '87cbd6deab665aa0aa1eeedf22989f704cdb80de75d703a46ce6229786e037fc';
+    const startDt = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10);
+    const endDt = new Date().toISOString().slice(0, 10);
+
+    const url = `http://data4library.kr/api/loanItemSrch?authKey=${authKey}&startDt=${startDt}&endDt=${endDt}&gender=${gender}&age=${age}&kdc=${theme}&dtl_kdc=${subTheme}&format=json&pageSize=10`;
+
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+
+      if (json.response && json.response.docs.length > 0) {
+        const randomIndex = Math.floor(Math.random() * json.response.docs.length);
+        const selectedBook = json.response.docs[randomIndex].doc;
+
+        const newRecommendedBook = {
+          name: selectedBook.bookname,
+          authors: selectedBook.authors,
+          publisher: selectedBook.publisher,
+          imageUrl: selectedBook.bookImageURL
+        };
+        setRecommendedBook(newRecommendedBook);
+      } else {
+        setRecommendedBook(null);
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+      setRecommendedBook(null);
+    }
   };
 
   return (
     <Main>
-      <HeaderLogo src={'/logo/horizontal_logo.svg'}/>
       <SizedBox height={'2rem'}/>
-      <Container show={showStage}>
-        {stage === 0 && (
+      <HeaderLogo src={'/logo/horizontal_logo.svg'}/>
+      <SizedBox height={'2.5rem'}/>
+      <Container show={showStage.toString()}>
+      {stage === 0 && (
           <>
             <ContentImg src={'/recommend/library1.png'} />
             <Heading>마법 도서관에 오신걸 환영합니다!!</Heading>
@@ -159,7 +384,7 @@ const MagicLibrary: React.FC = () => {
               당신은 평생 한 권만 읽을 수 있는 저주에 걸렸습니다!<br />
               마법 도서관 사서 다윈이 책 한 권을 추천해드려요!
             </Description>
-            <Button onClick={() => handleSelectGender('')}>책 추천받기</Button>
+            <Button onClick={startStage}>책 추천받기</Button>
           </>
         )}
         {stage === 1 && (
@@ -168,7 +393,7 @@ const MagicLibrary: React.FC = () => {
             <Heading>마법의 거울이 당신을 비추고 있습니다.</Heading>
             <Description>당신은 어떤 분인가요?</Description>
             <SelectOption
-              options={['남성', '여성', '그 외']}
+              options={genderOptions}
               onSelect={handleSelectGender}
             />
           </>
@@ -179,7 +404,7 @@ const MagicLibrary: React.FC = () => {
             <Heading>모래시계가 흐르고 있습니다.</Heading>
             <Description>시간이 얼마나 흘렀나요?</Description>
             <SelectOption
-              options={['10대', '20대', '30대', '40대', '50대', '60대 이상']}
+              options={ageOptions}
               onSelect={handleSelectAge}
             />
           </>
@@ -190,18 +415,7 @@ const MagicLibrary: React.FC = () => {
             <Heading>마법의 서재입니다.</Heading>
             <Description>어떤 분야에 관심이 있으신가요?</Description>
             <SelectOption
-              options={[
-                '총류',
-                '철학',
-                '종교',
-                '사회과학',
-                '자연과학',
-                '기술과학',
-                '예술',
-                '언어',
-                '문학',
-                '역사',
-              ]}
+              options={getTopicOptions()}
               onSelect={handleSelectTheme}
             />
           </>
@@ -212,7 +426,7 @@ const MagicLibrary: React.FC = () => {
             <Heading>마법의 서재입니다.</Heading>
             <Description>어떤 분야에 관심이 있으신가요?</Description>
             <SelectOption
-              options={themeOptions[theme]}
+              options={getSubtopicOptions(theme)}
               onSelect={handleSelectSubTheme}
             />
           </>
@@ -220,10 +434,20 @@ const MagicLibrary: React.FC = () => {
         {stage === 5 && (
           <>
             <Heading>당신이 평생 한권만 읽을 수 있다면</Heading>
-            <Description>{recommendedBook}</Description>
+            {recommendedBook ? (
+              <div>
+                <BookImage src={recommendedBook.imageUrl} alt="Recommended Book" />
+                <Description>
+                  {recommendedBook.name} by {recommendedBook.authors}, {recommendedBook.publisher}
+                </Description>
+              </div>
+            ) : (
+              <Description>No recommendation available.</Description>
+            )}
             <Button onClick={() => setStage(0)}>Restart</Button>
           </>
         )}
+
       </Container>
     </Main>
   );
