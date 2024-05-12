@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from "styled-components";
 import SizedBox from "../components/common/SizedBox";
+import {Helmet} from "react-helmet-async";
 
 const Main = styled.main`
   max-width: 768px;
@@ -18,17 +19,11 @@ const Container = styled.div<{ show?: string }>`
 
 const Heading = styled.h1`
   color: #333;
-  @media (max-width: 768px) {
-    font-size: 24px;
-  }
 `;
 
 const Description = styled.p`
   font-size: 16px;
   color: #666;
-  @media (max-width: 768px) {
-    font-size: 14px;
-  }
 `;
 
 const Button = styled.button`
@@ -38,10 +33,6 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   color: white;
-  @media (max-width: 768px) {
-    padding: 5px 10px;
-    font-size: 14px;
-  }
 `;
 
 const ContentImg = styled.img`
@@ -75,7 +66,7 @@ type Option = {
 const genderOptions = [
   { label: '남성', value: '0' },
   { label: '여성', value: '1' },
-  { label: '그 외', value: '2' }
+  { label: '상관없어요', value: '2' }
 ];
 
 const ageOptions = [
@@ -96,7 +87,9 @@ const SelectOption: React.FC<SelectOptionProps> = ({ options, onSelect }) => {
   return (
     <div>
       {options.map((option) => (
-        <Button key={option.value} onClick={() => onSelect(option.value)}>
+        <Button key={option.value}
+                className={'select-option'}
+                onClick={() => onSelect(option.value)}>
           {option.label}
         </Button>
       ))}
@@ -153,7 +146,7 @@ const topicMapping: TopicMapping = {
       { label: "천도교", value: "25" },
       { label: "신도", value: "26" },
       { label: "바라문교, 인도교", value: "27" },
-      { label: "회교(이슬람교", value: "28" },
+      { label: "회교(이슬람교)", value: "28" },
       { label: "기타 제종교", value: "29" }
     ]
   },
@@ -269,6 +262,7 @@ type BookInfo = {
   authors: string;
   publisher: string;
   imageUrl: string;
+  url: string;
 };
 
 const getTopicOptions = () => Object.keys(topicMapping).map(key => ({
@@ -358,7 +352,7 @@ const MagicLibrary: React.FC = () => {
     const startDt = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10);
     const endDt = new Date().toISOString().slice(0, 10);
 
-    const url = `http://data4library.kr/api/loanItemSrch?authKey=${authKey}&startDt=${startDt}&endDt=${endDt}&gender=${gender}&age=${age}&kdc=${theme}&dtl_kdc=${subTheme}&format=json&pageSize=15`;
+    const url = `https://data4library.kr/api/loanItemSrch?authKey=${authKey}&startDt=${startDt}&endDt=${endDt}&gender=${gender}&age=${age}&kdc=${theme}&dtl_kdc=${subTheme}&format=json&pageSize=15`;
 
     try {
       const response = await fetch(url);
@@ -372,7 +366,8 @@ const MagicLibrary: React.FC = () => {
           name: selectedBook.bookname,
           authors: selectedBook.authors,
           publisher: selectedBook.publisher,
-          imageUrl: selectedBook.bookImageURL
+          imageUrl: selectedBook.bookImageURL,
+          url: selectedBook.bookDtlUrl,
         };
         setRecommendedBook(newRecommendedBook);
       } else {
@@ -387,86 +382,99 @@ const MagicLibrary: React.FC = () => {
   };
 
   return (
-    <Main>
-      <SizedBox height={'2rem'}/>
-      <HeaderLogo src={'/logo/horizontal_logo.svg'}/>
-      <SizedBox height={'2.5rem'}/>
-      <Container show={showStage.toString()}>
-      {stage === 0 && (
-          <>
-            <ContentImg src={'/recommend/library1.png'} />
-            <Heading>마법 도서관에 오신걸 환영합니다!!</Heading>
-            <Description>
-              당신은 평생 한 권만 읽을 수 있는 저주에 걸렸습니다!<br />
-              마법 도서관 사서 다윈이 책 한 권을 추천해드려요!
-            </Description>
-            <Button onClick={startStage}>책 추천받기</Button>
-          </>
-        )}
-        {stage === 1 && (
-          <>
-            <ContentImg src={'/recommend/library2.png'} />
-            <Heading>마법의 거울이 당신을 비추고 있습니다.</Heading>
-            <Description>당신은 어떤 분인가요?</Description>
-            <SelectOption
-              options={genderOptions}
-              onSelect={handleSelectGender}
-            />
-          </>
-        )}
-        {stage === 2 && (
-          <>
-            <ContentImg src={'/recommend/library3.png'} />
-            <Heading>모래시계가 흐르고 있습니다.</Heading>
-            <Description>시간이 얼마나 흘렀나요?</Description>
-            <SelectOption
-              options={ageOptions}
-              onSelect={handleSelectAge}
-            />
-          </>
-        )}
-        {stage === 3 && (
-          <>
-            <ContentImg src={'/recommend/library4.png'} />
-            <Heading>마법의 서재입니다.</Heading>
-            <Description>어떤 분야에 관심이 있으신가요?</Description>
-            <SelectOption
-              options={getTopicOptions()}
-              onSelect={handleSelectTheme}
-            />
-          </>
-        )}
-        {stage === 4 && (
-          <>
-            <ContentImg src={'/recommend/library4.png'} />
-            <Heading>마법의 서재입니다.</Heading>
-            <Description>어떤 분야에 관심이 있으신가요?</Description>
-            <SelectOption
-              options={getSubtopicOptions(theme)}
-              onSelect={handleSelectSubTheme}
-            />
-          </>
-        )}
-        {stage === 5 && (
-          <>
-            <Heading>당신이 평생 한권만 읽을 수 있다면</Heading>
-            {isLoading ? (
-              <Description>Loading...</Description>
-            ) : recommendedBook ? (
-              <div>
-                <BookImage src={recommendedBook.imageUrl} alt="Recommended Book" />
-                <Description>
-                  {recommendedBook.name} by {recommendedBook.authors}, {recommendedBook.publisher}
-                </Description>
-                <Button onClick={handleRestart}>Restart</Button>
-              </div>
-            ) : (
-              <Description>No recommendation available.</Description>
-            )}
-          </>
-        )}
-      </Container>
-    </Main>
+    <>
+      <Helmet>
+        <title>책 추천 - 글조명</title>
+        <meta name="description" content="최고의 책 추천을 받아보세요. 글조명에서는 다양한 장르의 책을 추천합니다." />
+        <meta property="og:title" content="책 추천 - 글조명" />
+        <meta property="og:description" content="최고의 책 추천을 여기에서. 글조명과 함께하세요." />
+        <meta property="og:image" content="%PUBLIC_URL%/logo.png" />
+      </Helmet>
+      <Main>
+        <SizedBox height={'2rem'}/>
+        <HeaderLogo src={'/logo/horizontal_logo.svg'} alt={"글조명 로고 이미지"}/>
+        <SizedBox height={'2.5rem'}/>
+        <Container show={showStage.toString()}>
+        {stage === 0 && (
+            <>
+              <ContentImg src={'/images/recommend/library1.png'} />
+              <Heading>마법 도서관에 오신걸 환영합니다!!</Heading>
+              <Description>
+                당신은 평생 한 권만 읽을 수 있는 저주에 걸렸습니다!<br />
+                마법 도서관 사서 다윈이 책 한 권을 추천해드려요!
+              </Description>
+              <Button onClick={startStage}>책 추천받기</Button>
+            </>
+          )}
+          {stage === 1 && (
+            <>
+              <ContentImg src={'/images/recommend/library2.png'} />
+              <Heading>마법의 거울이 당신을 비추고 있습니다.</Heading>
+              <Description>당신은 어떤 분인가요?</Description>
+              <SelectOption
+                options={genderOptions}
+                onSelect={handleSelectGender}
+              />
+            </>
+          )}
+          {stage === 2 && (
+            <>
+              <ContentImg src={'/images/recommend/library3.png'} />
+              <Heading>모래시계가 흐르고 있습니다.</Heading>
+              <Description>시간이 얼마나 흘렀나요?</Description>
+              <SelectOption
+                options={ageOptions}
+                onSelect={handleSelectAge}
+              />
+            </>
+          )}
+          {stage === 3 && (
+            <>
+              <ContentImg src={'/images/recommend/library4.png'} />
+              <Heading>마법의 서재입니다.</Heading>
+              <Description>어떤 분야에 관심이 있으신가요?</Description>
+              <SelectOption
+                options={getTopicOptions()}
+                onSelect={handleSelectTheme}
+              />
+            </>
+          )}
+          {stage === 4 && (
+            <>
+              <ContentImg src={'/images/recommend/library4.png'} />
+              <Heading>마법의 서재입니다.</Heading>
+              <Description>더 자세하게 선택해볼까요?</Description>
+              <SelectOption
+                options={getSubtopicOptions(theme)}
+                onSelect={handleSelectSubTheme}
+              />
+            </>
+          )}
+          {stage === 5 && (
+            <>
+              <Heading>당신이 평생 한권만 읽을 수 있다면</Heading>
+              {isLoading ? (
+                <Description>Loading...</Description>
+              ) : recommendedBook ? (
+                <div>
+                  <a href={recommendedBook.url}>
+                    <BookImage src={recommendedBook.imageUrl} alt="Recommended Book" />
+                  </a>
+                  <Description>
+                    책제목: {recommendedBook.name}<br/><br/>
+                    저자: {recommendedBook.authors}<br/><br/>
+                    출판사: {recommendedBook.publisher}<br/><br/>
+                  </Description>
+                  <Button onClick={handleRestart}>Restart</Button>
+                </div>
+              ) : (
+                <Description>No recommendation available.</Description>
+              )}
+            </>
+          )}
+        </Container>
+      </Main>
+    </>
   );
 };
 

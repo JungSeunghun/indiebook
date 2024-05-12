@@ -2,6 +2,7 @@ import React, {useEffect, useReducer, useRef, useState} from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styled from "styled-components";
+import {Helmet} from "react-helmet-async";
 
 const Main = styled.main`
   max-width: 1136px;
@@ -192,34 +193,42 @@ const MainPage: React.FC = () => {
   const { ref: colorSection2Ref, position: colorSection2Pos } = useRandomMovement(60, 60, 0.1);
 
   return (
-    <div>
-      <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}%`, top: `${yellowCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFB443"/>
-      <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}%`, top: `${whiteCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
-      <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}%`, top: `${yellowCircle2Pos.y}%`, width: "128px", height: "128px" }} color="#FFB443"/>
-      <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}%`, top: `${whiteCircle2Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
-      <Header/>
-      <Main>
-        <MainPageLogo src={'/logo/main_page_logo.svg'}/>
-        <NormalSection ref={normalSectionRef} style={{ left: `${normalSectionPos.x}%`, top: `${normalSectionPos.y}%` }}>
-          공지사항<br/>
-          날짜: 24.04.20<br/><br/>
-          글조명 1.0ver 홈페이지 오픈~!
-        </NormalSection>
-        <Link href={'https://www.instagram.com/textlamp'} target={'_blank'}>
-          <ColorSection1 ref={colorSection1Ref} style={{ left: `${colorSection1Pos.x}%`, top: `${colorSection1Pos.y}%` }}>
-            글조명 인스타 팔로우하고<br/>
-            나만의 꽃 그림 받아가세요~
-          </ColorSection1>
-        </Link>
-        <Link href={'https://www.instagram.com/textlamp'} target={'_blank'}>
-          <ColorSection2 ref={colorSection2Ref} style={{ left: `${colorSection2Pos.x}%`, top: `${colorSection2Pos.y}%` }}>
-            인스타그램<br/>
-            바로가기
-          </ColorSection2>
-        </Link>
-      </Main>
-      <Footer/>
-    </div>
+    <>
+      <Helmet>
+        <title>메인 페이지 - 글조명</title>
+        <meta property="og:title" content="글조명" />
+        <meta property="og:description" content="글조명, 글을 조명하다." />
+        <meta property="og:image" content="%PUBLIC_URL%/logo.png" />
+      </Helmet>
+      <div>
+        <MovableComponent ref={yellowCircle1Ref} style={{ left: `${yellowCircle1Pos.x}%`, top: `${yellowCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFB443"/>
+        <MovableComponent ref={whiteCircle1Ref} style={{ left: `${whiteCircle1Pos.x}%`, top: `${whiteCircle1Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
+        <MovableComponent ref={yellowCircle2Ref} style={{ left: `${yellowCircle2Pos.x}%`, top: `${yellowCircle2Pos.y}%`, width: "128px", height: "128px" }} color="#FFB443"/>
+        <MovableComponent ref={whiteCircle2Ref} style={{ left: `${whiteCircle2Pos.x}%`, top: `${whiteCircle2Pos.y}%`, width: "256px", height: "256px" }} color="#FFFFFF"/>
+        <Header/>
+        <Main>
+          <MainPageLogo src={'/logo/main_page_logo.svg'}/>
+          <NormalSection ref={normalSectionRef} style={{ left: `${normalSectionPos.x}%`, top: `${normalSectionPos.y}%` }}>
+            공지사항<br/>
+            날짜: 24.04.20<br/><br/>
+            글조명 1.0ver 홈페이지 오픈~!
+          </NormalSection>
+          <Link href={'https://www.instagram.com/textlamp'} target={'_blank'}>
+            <ColorSection1 ref={colorSection1Ref} style={{ left: `${colorSection1Pos.x}%`, top: `${colorSection1Pos.y}%` }}>
+              글조명 인스타 팔로우하고<br/>
+              나만의 꽃 그림 받아가세요~
+            </ColorSection1>
+          </Link>
+          <Link href={'https://www.instagram.com/textlamp'} target={'_blank'}>
+            <ColorSection2 ref={colorSection2Ref} style={{ left: `${colorSection2Pos.x}%`, top: `${colorSection2Pos.y}%` }}>
+              인스타그램<br/>
+              바로가기
+            </ColorSection2>
+          </Link>
+        </Main>
+        <Footer/>
+      </div>
+    </>
   );
 };
 

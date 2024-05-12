@@ -11,18 +11,10 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <HelmetProvider>
-        <Helmet>
-          <meta property="og:title" content="글조명" />
-          <meta property="og:description" content="글을 조명하다." />
-          <meta property="og:image" content="/logo.png" />
-        </Helmet>
         <Router>
           <ScrollToTop/>
           <Routes>
             <Route path="/" element={<MainPage/>}/>
-          </Routes>
-
-          <Routes>
             <Route path="/recommend" element={<RecommendPage/>}/>
           </Routes>
         </Router>
