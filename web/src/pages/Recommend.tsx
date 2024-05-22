@@ -35,6 +35,15 @@ const Button = styled.button`
   color: white;
 `;
 
+const BackButton = styled.button`
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: beige;
+  border: 1px solid #333;
+  cursor: pointer;
+  color: #333;
+`;
+
 const ContentImg = styled.img`
   width: 50%;
   height: 50%;
@@ -346,6 +355,15 @@ const MagicLibrary: React.FC = () => {
     setStage(0);
   };
 
+  const handleGoBack = () => {
+    if (stage > 0) {
+      setShowStage(false);
+      setTimeout(() => {
+        setStage(stage - 1);
+      }, 500);
+    }
+  };
+
   const fetchData = async () => {
     setIsLoading(true);
     const authKey = '87cbd6deab665aa0aa1eeedf22989f704cdb80de75d703a46ce6229786e037fc';
@@ -471,6 +489,10 @@ const MagicLibrary: React.FC = () => {
                 <Description>No recommendation available.</Description>
               )}
             </>
+          )}
+
+          {stage >= 1 && stage < 5 && (
+            <BackButton onClick={handleGoBack}>뒤로 가기</BackButton>
           )}
         </Container>
       </Main>

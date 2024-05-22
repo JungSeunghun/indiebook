@@ -31,6 +31,13 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.springframework.security:spring-security-test")
+
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.security:spring-security-core")
+	implementation("org.springframework.security:spring-security-config")
+	implementation("org.springframework.security:spring-security-web")
+	implementation("org.springframework.security:spring-security-webflux")
+	implementation("org.springframework.security:spring-security-crypto")
 }
 
 tasks.withType<KotlinCompile> {
